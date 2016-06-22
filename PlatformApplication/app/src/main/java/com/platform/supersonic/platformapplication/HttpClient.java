@@ -2,22 +2,28 @@ package com.platform.supersonic.platformapplication;
 
 import android.os.AsyncTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpClient extends AsyncTask<Void, Void, String> {
 
-    private String url;
-    private String auth;
-    public HttpClient(String url, String auth) {
+    private Request request;
+    private User user;
+
+    public HttpClient(Request request, User user) {
         super();
 
-        this.url = url;
-        this.auth = auth;
+        this.request = request;
+        this.user = user;
     }
 
     @Override
@@ -34,14 +40,27 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
-            URL url = new URL(this.url);
+            URL url = new URL(this.request.getUrl());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod(this.request.getMethod());
             urlConnection.setRequestProperty("Content-Type", "application/json");
-            if (this.auth != null){
-                urlConnection.setRequestProperty("Authorization", "Advanced " + this.auth);
+            urlConnection.setRequestProperty("Accept", "application/json");
+
+            if (this.request.getMethod() == "POST"){
+                JSONObject msg = new JSONObject();;
+                msg.put("username",user.getUser());
+                msg.put("password", user.getPassword());
+
+                OutputStream os = urlConnection.getOutputStream();
+                OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+                osw.write(msg.toString());
+                osw.flush();
+                osw.close();
+            }
+            if (this.request.getAuth() != null){
+                urlConnection.setRequestProperty("Authorization", "Advanced " + this.request.getAuth());
             }
             urlConnection.connect();
 
@@ -70,6 +89,9 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
             return bufferAsString;
         } catch (IOException e) {
 
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
             return null;
         } finally{
             if (urlConnection != null) {
