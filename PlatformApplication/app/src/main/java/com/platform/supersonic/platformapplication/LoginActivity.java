@@ -73,7 +73,6 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
                         Date expireDate = dateFormat.parse(expiration);
                         this.saveToken(token, expireDate);
                         Intent intent = new Intent(this, StatisticsActivity.class);
-                        intent.putExtra(TOKEN, token);
                         startActivity(intent);
                     }
                     catch (Exception e){
