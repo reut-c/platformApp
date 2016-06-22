@@ -36,7 +36,7 @@
                 android:resource="@xml/platform_appwidget_info" />
         </receiver>
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".BasicActivity"></activity>
     </application>
 

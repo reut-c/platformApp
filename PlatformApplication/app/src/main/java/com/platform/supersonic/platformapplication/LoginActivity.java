@@ -1,5 +1,6 @@
 package com.platform.supersonic.platformapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends BasicActivity implements View.OnClickListener {
+public class LoginActivity extends BasicActivity implements View.OnClickListener {
 
     Button bLogin;
     EditText etUsername,etPassword;
@@ -27,7 +28,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -36,7 +37,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
         bLogin.setOnClickListener(this);
     }
 
-    public void login(String username,String password){
+    public JSONObject login(String username,String password){
         try {
             User user = new User(username, password);
             Request request = new Request("https://platform.supersonic.com/partners/auth/login", null, "POST");
@@ -44,7 +45,9 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
             AsyncTask<Void, Void, String> asyncTask = http.execute();
             String st = asyncTask.get();
             JSONObject response = new JSONObject(st);
-            String token = response.getString("token");
+
+            return response;
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -52,6 +55,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -60,7 +64,22 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
             case R.id.bLogin:
                 String usernameText = etUsername.getText().toString();
                 String passwordText = etPassword.getText().toString();
-                this.login(usernameText,passwordText);
+                JSONObject jsonObject = this.login(usernameText,passwordText);
+                if (jsonObject != null){
+                    try {
+                        String token = jsonObject.getString("token");
+                        String expiration = jsonObject.getString("expiration");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date expireDate = dateFormat.parse(expiration);
+                        this.saveToken(token, expireDate);
+                        Intent intent = new Intent(this, StatisticsActivity.class);
+                        intent.putExtra(TOKEN, token);
+                        startActivity(intent);
+                    }
+                    catch (Exception e){
+                        return;
+                    }
+                }
                /* Intent i = new Intent(getApplicationContext(), SecondScreen.class);
                 StartActivity(i);*/
                 break;
@@ -69,7 +88,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener 
 
     private void saveToken(String token,Date expirationDate){
         SharedPreferences settings = getSharedPreferences(USERDATA, 0);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(TOKEN, token);
         editor.putString(EXPIRATION_DATE,dateFormat.format(expirationDate));
