@@ -14,7 +14,12 @@ public class StartActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        isTokenValid();
+        new Thread(new Runnable() {
+            public void run() {
+                isTokenValid();
+            }
+        }).start();
+
     }
 
     private void redirectToLoginPage(){
