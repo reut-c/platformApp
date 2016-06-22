@@ -3,19 +3,19 @@ package com.platform.supersonic.platformapplication;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BasicActivity implements View.OnClickListener {
 
     Button bLogin;
     EditText etUsername,etPassword;
@@ -23,10 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String USERDATA = "UserDataFile";
     public static final String TOKEN = "token";
     public static final String EXPIRATION_DATE = "expirationDate";
-
-    public MainActivity(){
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String st = asyncTask.get();
             JSONObject response = new JSONObject(st);
             String token = response.getString("token");
-            Toast toast = Toast.makeText(this.getBaseContext(),token,Toast.LENGTH_SHORT);
-            toast.show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -65,34 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.bLogin:
                 String usernameText = etUsername.getText().toString();
-                String passwordText = etUsername.getText().toString();
+                String passwordText = etPassword.getText().toString();
                 this.login(usernameText,passwordText);
                /* Intent i = new Intent(getApplicationContext(), SecondScreen.class);
                 StartActivity(i);*/
                 break;
-        }
-    }
-
-    private boolean isTokenValid(){
-        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
-        String token = settings.getString(TOKEN, null);
-        if (token == null){
-            return false;
-        } else {
-            String expirationDate = settings.getString(EXPIRATION_DATE,null);
-            if (expirationDate != null){
-                SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-                try {
-                    Date expireDate = dateFormat.parse(expirationDate);
-                    return expireDate.after(new Date());
-                }
-                catch (Exception e){
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
         }
     }
 
