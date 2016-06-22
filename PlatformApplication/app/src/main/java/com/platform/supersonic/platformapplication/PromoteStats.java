@@ -85,14 +85,14 @@ public class PromoteStats extends StatsBase{
                 JSONObject spend = kpis.getJSONObject("spendInLeadingCurrency");
                 KPI spendKPI = new KPI(
                         this.getTrendFromStr(spend.getString("trend")),
-                        "revenue",
+                        "spend",
                         spend.getString("value")
                 );
                 kpiList.add(spendKPI);
             } catch (JSONException e) {
                 kpiList.add(new KPI(
                         this.getTrendFromStr("same"),
-                        "revenue",
+                        "spend",
                         "0"
                 ));
             }

@@ -87,14 +87,14 @@ public class MonetizeStats extends StatsBase implements AdapterView.OnItemSelect
                 JSONObject spend = kpis.getJSONObject("spendInLeadingCurrency");
                 KPI spendKPI = new KPI(
                         this.getTrendFromStr(spend.getString("trend")),
-                        "spend",
+                        "revenue",
                         spend.getString("value")
                 );
                 kpiList.add(spendKPI);
             } catch (JSONException e) {
                 kpiList.add(new KPI(
                         this.getTrendFromStr("same"),
-                        "spend",
+                        "revenue",
                         "0"
                 ));
             }
