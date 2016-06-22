@@ -5,8 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:weightSum="1">
 
+
+    <ImageView
+        android:layout_width="241dp"
+        android:layout_height="192dp"
+        android:id="@+id/imageView"
+
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,6 +24,7 @@
 
     <EditText android:id="@+id/etUsername"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dip"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"/>
 

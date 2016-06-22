@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
 
@@ -75,15 +74,12 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         String str = (String) parent.getItemAtPosition(pos);
-        Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
-        toast.show();
+
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
-        String str = "Nothing was called";
-        Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
-        toast.show();
+
     }
 
 }
