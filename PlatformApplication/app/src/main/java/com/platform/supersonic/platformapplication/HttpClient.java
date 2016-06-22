@@ -49,7 +49,7 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
             urlConnection.setRequestProperty("Accept", "application/json");
 
             if (this.request.getMethod() == "POST"){
-                JSONObject msg = new JSONObject();;
+                JSONObject msg = new JSONObject();
                 msg.put("username",user.getUser());
                 msg.put("password", user.getPassword());
 
