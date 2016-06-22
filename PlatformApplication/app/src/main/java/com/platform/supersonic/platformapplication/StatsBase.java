@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
 
     String type;
+    protected String token;
+
+    private ListView kpiListView;
 
     public StatsBase() {
         // Required empty public constructor
@@ -30,8 +33,32 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
 
         View view = inflater.inflate(R.layout.stats, container, false);
 
-        TextView type = (TextView) view.findViewById(R.id.type);
-        type.setText(this.type);
+        KPI kpis[] = new KPI[]
+                {
+                        new KPI(KPI.TREND.UP,"Clicks","1000"),
+                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
+                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
+                        new KPI(KPI.TREND.UP,"Clicks","1000"),
+                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
+                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
+                        new KPI(KPI.TREND.UP,"Clicks","1000"),
+                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
+                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
+                        new KPI(KPI.TREND.UP,"Clicks","1000"),
+                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
+                        new KPI(KPI.TREND.SAME,"Clicks","1000")
+                };
+
+        KPIAdapter kpisadapter = new KPIAdapter(this.getContext(),
+                R.layout.kpi_row, kpis);
+
+
+        kpiListView = (ListView) view.findViewById(R.id.kpiListView);
+
+        kpiListView.setAdapter(kpisadapter);
+
+//        TextView type = (TextView) view.findViewById(R.id.type);
+//        type.setText(this.type);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.dates_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),

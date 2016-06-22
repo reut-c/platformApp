@@ -16,7 +16,7 @@ public class StartActivity extends BasicActivity {
 
         new Thread(new Runnable() {
             public void run() {
-                isTokenValid();
+                this.isTokenValid();
             }
         }).start();
 

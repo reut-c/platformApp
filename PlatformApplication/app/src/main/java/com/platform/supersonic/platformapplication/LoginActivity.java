@@ -1,7 +1,6 @@
 package com.platform.supersonic.platformapplication;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -85,12 +84,5 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         }
     }
 
-    private void saveToken(String token,Date expirationDate){
-        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(TOKEN, token);
-        editor.putString(EXPIRATION_DATE,dateFormat.format(expirationDate));
-        editor.apply();
-    }
+
 }
