@@ -5,6 +5,8 @@ import android.widget.AdapterView;
 
 public class MonetizeStats extends StatsBase implements AdapterView.OnItemSelectedListener{
 
+
+
     public MonetizeStats() {
         // Required empty public constructor
         this.type = "Monetize";
@@ -13,6 +15,8 @@ public class MonetizeStats extends StatsBase implements AdapterView.OnItemSelect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.token = getArguments().getString(BasicActivity.TOKEN);
     }
 
 

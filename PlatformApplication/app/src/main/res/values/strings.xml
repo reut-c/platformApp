@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PlatformApplication</string>
+    <string name="app_name">Platform Reports App</string>
     <string-array name="dates_options">
         <item>Today</item>
         <item>Yesterday</item>

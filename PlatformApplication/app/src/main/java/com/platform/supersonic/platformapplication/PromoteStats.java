@@ -12,6 +12,9 @@ public class PromoteStats extends StatsBase{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.token = getArguments().getString(BasicActivity.TOKEN);
+
     }
 
 }
