@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
 
     String type;
+    protected String token;
 
     public StatsBase() {
         // Required empty public constructor

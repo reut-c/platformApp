@@ -6,22 +6,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends BasicActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        Bundle extras = getIntent().getExtras();
+        this.token = this.getToken();
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,8 +40,17 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MonetizeStats(), "Monetize");
-        adapter.addFragment(new PromoteStats(), "Promote");
+
+        Bundle args = new Bundle();
+        args.putString(BasicActivity.TOKEN, this.token);
+
+        MonetizeStats monetizeStatsFragment = new MonetizeStats();
+        monetizeStatsFragment.setArguments(args);
+        PromoteStats promoteStatsFragment = new PromoteStats();
+        promoteStatsFragment.setArguments(args);
+
+        adapter.addFragment(monetizeStatsFragment, "Monetize");
+        adapter.addFragment(promoteStatsFragment, "Promote");
         viewPager.setAdapter(adapter);
     }
 
