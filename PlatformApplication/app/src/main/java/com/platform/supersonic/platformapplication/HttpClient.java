@@ -1,5 +1,7 @@
 package com.platform.supersonic.platformapplication;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -18,12 +20,22 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
 
     private Request request;
     private User user;
+    private ProgressDialog pd;
 
     public HttpClient(Request request, User user) {
         super();
 
         this.request = request;
         this.user = user;
+    }
+
+    public HttpClient(Request request, User user, Context context) {
+        super();
+
+        this.request = request;
+        this.user = user;
+        //Create a Progressdialog
+        this.pd = new ProgressDialog(context);
     }
 
     @Override
@@ -105,5 +117,19 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPreExecute()
+    {
+        //Set the Progressdialog
+        this.pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        this.pd.setMessage("Loading....");
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        //Dismiss Progressdialog
+        this.pd.dismiss();
     }
 }

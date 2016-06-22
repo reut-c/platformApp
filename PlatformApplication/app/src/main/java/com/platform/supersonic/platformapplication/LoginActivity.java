@@ -40,7 +40,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         try {
             User user = new User(username, password);
             Request request = new Request("https://platform.supersonic.com/partners/auth/login", null, "POST");
-            HttpClient http = new HttpClient(request, user);
+            HttpClient http = new HttpClient(request, user, getBaseContext());
             AsyncTask<Void, Void, String> asyncTask = http.execute();
             String st = asyncTask.get();
             JSONObject response = new JSONObject(st);

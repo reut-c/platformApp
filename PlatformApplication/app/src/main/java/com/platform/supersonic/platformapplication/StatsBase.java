@@ -1,6 +1,5 @@
 package com.platform.supersonic.platformapplication;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,17 +11,15 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
 
     String type;
     protected String token;
 
-    private ListView kpiListView;
+    protected ListView kpiListView;
 
     public StatsBase() {
         // Required empty public constructor
@@ -39,29 +36,8 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
 
         View view = inflater.inflate(R.layout.stats, container, false);
 
-        KPI kpis[] = new KPI[]
-                {
-                        new KPI(KPI.TREND.UP,"Clicks","1000"),
-                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
-                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
-                        new KPI(KPI.TREND.UP,"Clicks","1000"),
-                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
-                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
-                        new KPI(KPI.TREND.UP,"Clicks","1000"),
-                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
-                        new KPI(KPI.TREND.SAME,"Clicks","1000"),
-                        new KPI(KPI.TREND.UP,"Clicks","1000"),
-                        new KPI(KPI.TREND.DOWN,"Clicks","1000"),
-                        new KPI(KPI.TREND.SAME,"Clicks","1000")
-                };
-
-        KPIAdapter kpisadapter = new KPIAdapter(this.getContext(),
-                R.layout.kpi_row, kpis);
-
-
         kpiListView = (ListView) view.findViewById(R.id.kpiListView);
 
-        kpiListView.setAdapter(kpisadapter);
 
 //        TextView type = (TextView) view.findViewById(R.id.type);
 //        type.setText(this.type);
@@ -79,38 +55,28 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-
-        try {
-            // An item was selected. You can retrieve the selected item using
-            String str = (String) parent.getItemAtPosition(pos);
-            String dateClause = this.getDateClauseFromDropdown(str);
-            String url = "https://platform.supersonic.com/api/rest/v1/partners/statistics/promoteTopData?breakdowns[]=date&breakdowns[]=campaign&showAllPossibleRecords=1&top=5&fromDate=2016-6-16&toDate=2016-6-22";
-            Request request = new Request(url, this.token, "GET");
-            HttpClient http = new HttpClient(request, null);
-            AsyncTask<Void, Void, String> asyncTask = http.execute();
-            String st = null;
-            st = asyncTask.get();
-            JSONObject response = new JSONObject(st);
-
-            JSONObject kpis = new JSONObject(response.getString("kpis"));
-
-            
-
-
-            Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
-            toast.show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        // An item was selected. You can retrieve the selected item using
+        String str = (String) parent.getItemAtPosition(pos);
+        Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
+        toast.show();
     }
 
-    private String getDateClauseFromDropdown(String chosenDate) {
-        return "";
+    protected String getDateClauseFromDropdown(String chosenDate) {
+        String today = new SimpleDateFormat("yyyy-M-dd").format(new java.util.Date());
+        switch (chosenDate){
+            case "today":
+                return "&fromDate=" + today + "&toDate=" + today;
+            case "yesterday":
+                String yesterday = this.getDaysBeforeDateString(1);
+                return "&fromDate=" + yesterday + "&toDate=" + today;
+            case "Last 7 Days":
+                String lastWeek = this.getDaysBeforeDateString(7);
+                return "&fromDate=" + lastWeek + "&toDate=" + today;
+            case "Last 14 Days":
+                String lastTwoWeek = this.getDaysBeforeDateString(14);
+                return "&fromDate=" + lastTwoWeek + "&toDate=" + today;
+        }
+        return "&fromDate=" + today + "&toDate=" + today;
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
@@ -118,6 +84,27 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
         String str = "Nothing was called";
         Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    protected KPI.TREND getTrendFromStr(String trend){
+        if (trend.equals("same")){
+            return  KPI.TREND.SAME;
+        }
+        if (trend.equals("down")){
+            return  KPI.TREND.DOWN;
+        }
+        if (trend.equals("up")){
+            return KPI.TREND.UP;
+        }
+
+        return KPI.TREND.SAME;
+    }
+
+    private String getDaysBeforeDateString(int numberOfDays) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -numberOfDays);
+        return dateFormat.format(cal.getTime());
     }
 
 }
