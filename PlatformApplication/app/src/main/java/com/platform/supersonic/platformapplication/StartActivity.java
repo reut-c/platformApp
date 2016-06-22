@@ -16,18 +16,18 @@ public class StartActivity extends BasicActivity {
 
         new Thread(new Runnable() {
             public void run() {
-                this.isTokenValid();
+                isTokenValid();
             }
         }).start();
 
     }
 
-    private void redirectToLoginPage(){
+    protected void redirectToLoginPage(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
     }
 
-    private void isTokenValid(){
+    protected void isTokenValid(){
         SharedPreferences settings = getSharedPreferences(USERDATA, 0);
         String token = settings.getString(TOKEN, null);
         if (token == null){ // if the user doesn't have token, move to the login page
