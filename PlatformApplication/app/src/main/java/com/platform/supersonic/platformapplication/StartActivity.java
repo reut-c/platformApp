@@ -14,9 +14,44 @@ public class StartActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        this.isTokenValid();
+        new Thread(new Runnable() {
+            public void run() {
+                isTokenValid();
+            }
+        }).start();
+
     }
 
+    protected void redirectToLoginPage(){
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+    }
 
-
+    protected void isTokenValid(){
+        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
+        String token = settings.getString(TOKEN, null);
+        if (token == null){ // if the user doesn't have token, move to the login page
+            redirectToLoginPage();
+        } else { // user has token
+            String expirationDate = settings.getString(EXPIRATION_DATE,null);
+            if (expirationDate != null){
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date expireDate = dateFormat.parse(expirationDate);
+                    if(expireDate.after(new Date())){
+                        Intent intent = new Intent(this,StatisticsActivity.class);
+                        startActivity(intent);
+                    } else{
+                        redirectToLoginPage();
+                    }
+                }
+                catch (Exception e){
+                    redirectToLoginPage();
+                }
+            }
+            else {
+                redirectToLoginPage();
+            }
+        }
+    }
 }

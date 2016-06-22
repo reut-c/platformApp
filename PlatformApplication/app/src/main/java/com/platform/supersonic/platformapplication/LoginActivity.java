@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,14 +39,34 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
 
     public JSONObject login(String username,String password){
         try {
+            if (username.equals("")){
+                String str = "Username is required";
+                Toast toast = Toast.makeText(this.getBaseContext(),str,Toast.LENGTH_SHORT);
+                toast.show();
+                return null;
+            }
+
+            if (password.equals("")){
+                String str = "Password is required";
+                Toast toast = Toast.makeText(this.getBaseContext(),str,Toast.LENGTH_SHORT);
+                toast.show();
+                return null;
+            }
+
             User user = new User(username, password);
             Request request = new Request("https://platform.supersonic.com/partners/auth/login", null, "POST");
             HttpClient http = new HttpClient(request, user, getBaseContext());
             AsyncTask<Void, Void, String> asyncTask = http.execute();
             String st = asyncTask.get();
-            JSONObject response = new JSONObject(st);
-
-            return response;
+            if (st == null){
+                String str = "Wrong username or password";
+                Toast toast = Toast.makeText(this.getBaseContext(),str,Toast.LENGTH_SHORT);
+                toast.show();
+                return null;
+            } else {
+                JSONObject response = new JSONObject(st);
+                return response;
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
