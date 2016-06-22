@@ -3,11 +3,12 @@ package com.platform.supersonic.platformapplication;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -19,10 +20,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TOKEN = "token";
     public static final String EXPIRATION_DATE = "expirationDate";
 
-    private SharedPreferences settings;
-
     public MainActivity(){
-        this.settings = getSharedPreferences(USERDATA, 0);
+
     }
 
     @Override
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isTokenValid(){
+        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
         String token = settings.getString(TOKEN, null);
         if (token == null){
             return false;
@@ -69,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void saveToken(String token,Date expirationDate){
+        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-        SharedPreferences.Editor editor = this.settings.edit();
+        SharedPreferences.Editor editor = settings.edit();
         editor.putString(TOKEN, token);
         editor.putString(EXPIRATION_DATE,dateFormat.format(expirationDate));
         editor.apply();
