@@ -31,15 +31,6 @@ public class HttpClient extends AsyncTask<Void, Void, String> {
         this.pd = new ProgressDialog(context);
     }
 
-    public HttpClient(Request request, User user, Context context) {
-        super();
-
-        this.request = request;
-        this.user = user;
-        //Create a Progressdialog
-        this.pd = new ProgressDialog(context);
-    }
-
     @Override
     protected String doInBackground(Void... params) {
         // These two need to be declared outside the try/catch

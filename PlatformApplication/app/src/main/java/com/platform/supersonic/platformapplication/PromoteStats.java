@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,8 +124,6 @@ public class PromoteStats extends StatsBase{
 
             kpiListView.setAdapter(kpisadapter);
 
-            Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
-            toast.show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
