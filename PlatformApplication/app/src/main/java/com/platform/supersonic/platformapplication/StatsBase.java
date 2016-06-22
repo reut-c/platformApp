@@ -1,5 +1,6 @@
 package com.platform.supersonic.platformapplication;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
 
@@ -47,10 +53,38 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        String str = (String) parent.getItemAtPosition(pos);
-        Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
-        toast.show();
+
+        try {
+            // An item was selected. You can retrieve the selected item using
+            String str = (String) parent.getItemAtPosition(pos);
+            String dateClause = this.getDateClauseFromDropdown(str);
+            String url = "https://platform.supersonic.com/api/rest/v1/partners/statistics/promoteTopData?breakdowns[]=date&breakdowns[]=campaign&showAllPossibleRecords=1&top=5&fromDate=2016-6-16&toDate=2016-6-22";
+            Request request = new Request(url, this.token, "GET");
+            HttpClient http = new HttpClient(request, null);
+            AsyncTask<Void, Void, String> asyncTask = http.execute();
+            String st = null;
+            st = asyncTask.get();
+            JSONObject response = new JSONObject(st);
+
+            JSONObject kpis = new JSONObject(response.getString("kpis"));
+
+            
+
+
+            Toast toast = Toast.makeText(this.getContext(),str,Toast.LENGTH_SHORT);
+            toast.show();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String getDateClauseFromDropdown(String chosenDate) {
+        return "";
     }
 
     public void onNothingSelected(AdapterView<?> parent) {

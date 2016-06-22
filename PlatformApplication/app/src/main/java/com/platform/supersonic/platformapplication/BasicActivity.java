@@ -34,7 +34,6 @@ public class BasicActivity extends AppCompatActivity {
         String token = settings.getString(TOKEN, null);
         return token;
     }
-    
     protected void redirectToLoginPage(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
