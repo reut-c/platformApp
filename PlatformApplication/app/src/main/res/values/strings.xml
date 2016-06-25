@@ -6,4 +6,5 @@
         <item>Last 7 Days</item>
         <item>Last 14 Days</item>
     </string-array>
+    <string name="empty_string"></string>
 </resources>

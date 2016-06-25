@@ -67,7 +67,7 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
     protected String getDateClauseFromDropdown(String chosenDate) {
         String today = new SimpleDateFormat("yyyy-M-dd").format(new java.util.Date());
         switch (chosenDate){
-            case "today":
+            case "Today":
                 return "&fromDate=" + today + "&toDate=" + today;
             case "Yesterday":
                 String yesterday = this.getDaysBeforeDateString(1);
