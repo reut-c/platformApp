@@ -24,7 +24,7 @@
         android:id="@+id/kpiValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dip"
+        android:layout_marginRight="54dip"
         android:layout_alignEnd="@+id/kpiTrend"
         android:layout_centerVertical="true"
         android:paddingBottom ="10dip"
