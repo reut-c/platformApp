@@ -10,7 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StatsBase extends Fragment implements AdapterView.OnItemSelectedListener{
@@ -64,14 +69,14 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
         switch (chosenDate){
             case "today":
                 return "&fromDate=" + today + "&toDate=" + today;
-            case "yesterday":
+            case "Yesterday":
                 String yesterday = this.getDaysBeforeDateString(1);
-                return "&fromDate=" + yesterday + "&toDate=" + today;
+                return "&fromDate=" + yesterday + "&toDate=" + yesterday;
             case "Last 7 Days":
-                String lastWeek = this.getDaysBeforeDateString(7);
+                String lastWeek = this.getDaysBeforeDateString(6);
                 return "&fromDate=" + lastWeek + "&toDate=" + today;
             case "Last 14 Days":
-                String lastTwoWeek = this.getDaysBeforeDateString(14);
+                String lastTwoWeek = this.getDaysBeforeDateString(13);
                 return "&fromDate=" + lastTwoWeek + "&toDate=" + today;
         }
         return "&fromDate=" + today + "&toDate=" + today;
@@ -101,6 +106,31 @@ public class StatsBase extends Fragment implements AdapterView.OnItemSelectedLis
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -numberOfDays);
         return dateFormat.format(cal.getTime());
+    }
+
+    protected void addKPIToList(JSONObject kpis, ArrayList<KPI> kpiList, String kpiName, String presentingName, boolean addCurrency) {
+        try {
+            JSONObject kpi = kpis.getJSONObject(kpiName);
+            String value = kpi.getString("value");
+            KPI clickKPI = new KPI(
+                    this.getTrendFromStr(kpi.getString("trend")),
+                    presentingName,
+                    addCurrency ? this.formatKPINumber(value)  + " $" : this.formatKPINumber(value)
+            );
+            kpiList.add(clickKPI);
+        } catch (JSONException e) {
+            kpiList.add(new KPI(
+                    this.getTrendFromStr("same"),
+                    presentingName,
+                    "N/A"
+            ));
+        }
+    }
+
+    private String formatKPINumber(String value){
+        double amount = Double.parseDouble(value);
+        DecimalFormat formatter = new DecimalFormat("#,###.##");
+        return formatter.format(amount);
     }
 
 }

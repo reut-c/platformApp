@@ -54,7 +54,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
             }
 
             User user = new User(username, password);
-            Request request = new Request("https://platform.supersonic.com/partners/auth/login", null, "POST");
+            Request request = new Request(BasicActivity.BASE_URL + "partners/auth/login", null, "POST");
             HttpClient http = new HttpClient(request, user, getBaseContext());
             AsyncTask<Void, Void, String> asyncTask = http.execute();
             String st = asyncTask.get();
@@ -99,8 +99,6 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
                         return;
                     }
                 }
-               /* Intent i = new Intent(getApplicationContext(), SecondScreen.class);
-                StartActivity(i);*/
                 break;
         }
     }

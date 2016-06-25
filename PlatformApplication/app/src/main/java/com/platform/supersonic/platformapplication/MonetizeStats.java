@@ -36,7 +36,8 @@ public class MonetizeStats extends StatsBase implements AdapterView.OnItemSelect
             // An item was selected. You can retrieve the selected item using
             String str = (String) parent.getItemAtPosition(pos);
             String dateClause = this.getDateClauseFromDropdown(str);
-            String url = "https://platform.supersonic.com/api/rest/v1/partners/statistics/promoteTopData?breakdowns[]=date&breakdowns[]=campaign&showAllPossibleRecords=1&top=5" + dateClause;
+
+            String url = BasicActivity.BASE_URL + "api/rest/v1/partners/statistics/mediationTopData?breakdowns[]=date&breakdowns[]=adSource&showAllPossibleRecords=1&top=5&fields=revenue,eCPM,fillRate,requests,impressions&units=242&adSource=any" + dateClause;
             Request request = new Request(url, this.token, "GET");
             HttpClient http = new HttpClient(request, null, this.getContext());
             AsyncTask<Void, Void, String> asyncTask = http.execute();
@@ -51,79 +52,17 @@ public class MonetizeStats extends StatsBase implements AdapterView.OnItemSelect
 
             ArrayList<KPI> kpiList = new ArrayList<KPI>();
 
-            try {
-                JSONObject clicks = kpis.getJSONObject("clicks");
-                KPI clickKPI = new KPI(
-                        this.getTrendFromStr(clicks.getString("trend")),
-                        "clicks",
-                        clicks.getString("value")
-                );
-                kpiList.add(clickKPI);
-            } catch (JSONException e) {
-                kpiList.add(new KPI(
-                        this.getTrendFromStr("same"),
-                        "clicks",
-                        "0"
-                ));
-            }
-
-            try {
-                JSONObject completionCount = kpis.getJSONObject("completionCount");
-                KPI completionCountKPI = new KPI(
-                        this.getTrendFromStr(completionCount.getString("trend")),
-                        "completions",
-                        completionCount.getString("value")
-                );
-                kpiList.add(completionCountKPI);
-            } catch (JSONException e) {
-                kpiList.add(new KPI(
-                        this.getTrendFromStr("same"),
-                        "completions",
-                        "0"
-                ));
-            }
-
-            try {
-                JSONObject spend = kpis.getJSONObject("spendInLeadingCurrency");
-                KPI spendKPI = new KPI(
-                        this.getTrendFromStr(spend.getString("trend")),
-                        "revenue",
-                        spend.getString("value")
-                );
-                kpiList.add(spendKPI);
-            } catch (JSONException e) {
-                kpiList.add(new KPI(
-                        this.getTrendFromStr("same"),
-                        "revenue",
-                        "0"
-                ));
-            }
-
-            try {
-
-                JSONObject impressions = kpis.getJSONObject("impressions");
-                KPI impressionsKPI = new KPI(
-                        this.getTrendFromStr(impressions.getString("trend")),
-                        "impressions",
-                        impressions.getString("value")
-                );
-                kpiList.add(impressionsKPI);
-            } catch (JSONException e) {
-                kpiList.add(new KPI(
-                        this.getTrendFromStr("same"),
-                        "impressions",
-                        "0"
-                ));
-            }
+            this.addKPIToList(kpis, kpiList, "revenue", "Revenue", true);
+            this.addKPIToList(kpis, kpiList, "eCPM", "eCPM", true);
+            this.addKPIToList(kpis, kpiList, "requests", "Requests", false);
+            this.addKPIToList(kpis, kpiList, "fulfillments", "Fulfillments", false);
+            this.addKPIToList(kpis, kpiList, "impressions", "Impressions", false);
 
             KPI[] kpiArr = new KPI[kpiList.size()];
             kpiArr = kpiList.toArray(kpiArr);
 
             KPIAdapter kpisadapter = new KPIAdapter(this.getContext(),
                     R.layout.kpi_row, kpiArr);
-
-
-
 
             kpiListView.setAdapter(kpisadapter);
 

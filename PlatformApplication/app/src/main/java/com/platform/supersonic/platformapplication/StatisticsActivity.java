@@ -1,5 +1,6 @@
 package com.platform.supersonic.platformapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,16 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatisticsActivity extends BasicActivity {
+public class StatisticsActivity extends BasicActivity implements View.OnClickListener{
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private String token;
+    private Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +33,16 @@ public class StatisticsActivity extends BasicActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        this.logout = (Button) findViewById(R.id.bLogout);
+        this.logout.setOnClickListener(this);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -52,6 +59,17 @@ public class StatisticsActivity extends BasicActivity {
         adapter.addFragment(monetizeStatsFragment, "Monetize");
         adapter.addFragment(promoteStatsFragment, "Promote");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+            case R.id.bLogout:
+                this.deleteToken();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -82,4 +100,6 @@ public class StatisticsActivity extends BasicActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+
 }

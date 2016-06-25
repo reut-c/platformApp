@@ -13,6 +13,7 @@ public class BasicActivity extends AppCompatActivity {
     public static final String USERDATA = "UserDataFile";
     public static final String TOKEN = "token";
     public static final String EXPIRATION_DATE = "expirationDate";
+    public static final String BASE_URL = "https://platform.supersonic.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,12 @@ public class BasicActivity extends AppCompatActivity {
         editor.putString(TOKEN, token);
         editor.putString(EXPIRATION_DATE,dateFormat.format(expirationDate));
         editor.apply();
+    }
+
+    protected void deleteToken(){
+        SharedPreferences settings = getSharedPreferences(USERDATA, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.clear();
     }
 
     protected String getToken(){
